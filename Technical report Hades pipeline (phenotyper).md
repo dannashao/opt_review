@@ -487,6 +487,8 @@ def build_biased_graph(
 
 ```
 
+## Logic changes and bug fix
+
 ### Minor fix in segmentation_primary()
 Currently at
 
@@ -504,8 +506,6 @@ if y1 < y2:
     # or virtual_cost = best_dist * some_factor if want heavy penalty on virtual edge
     G_biased.add_edge(tip1, tip2, cost=virtual_cost, score=-best_dist, virtual=True)
 ```
-
-## Logic changes and bug fix
 
 ### build_biased_graph()
 
