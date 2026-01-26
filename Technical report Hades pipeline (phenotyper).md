@@ -30,7 +30,7 @@ The major waste here are
 Original function
 
 ```python
-def compute_cumulative_angle_deviation(coords):
+def compute__deviation(coords):
     """
     Compute the sum of angle deviations along the path segments.
     Smaller values mean straighter path.
@@ -148,8 +148,8 @@ def select_best_path(G, start_node, coord_map, min_dy_ratio=0.8, min_length=2, t
 ```
 
 The current process is:
-1. For each path: Construct coords (all points along the entire path)
-2. For each path: Calculate cumulative_angle
+1. For each path: Construct `coords` (all points along the entire path)
+2. For each path: Calculate `cumulative_angle`
 3. Only then filter to `dy_candidates[:top_n]` based on `dy`
 4. `Angle_deviation` is only compared in `top_n`
 
@@ -487,6 +487,23 @@ def build_biased_graph(
 
 ```
 
+### Minor fix in segmentation_primary()
+Currently at
+
+```python
+if y1 < y2:
+    G_biased.add_edge(tip1, tip2, score=-best_dist, virtual=True)
+```
+
+There's no weight assigned, which might result in using the NetworkX default 1. Change to:
+
+```python
+if y1 < y2:
+    # NetworkX's default cost is 1, which makes later nx.single_source_dijkstra(G_biased, start_node, weight='cost') using 1 as cost for virtual edges, which can cause unexpected behavior
+    virtual_cost = best_dist  # safest: use dist as cost
+    # or virtual_cost = best_dist * some_factor if want heavy penalty on virtual edge
+    G_biased.add_edge(tip1, tip2, cost=virtual_cost, score=-best_dist, virtual=True)
+```
 
 ## Logic changes and bug fix
 
