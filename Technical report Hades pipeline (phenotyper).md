@@ -316,6 +316,8 @@ Now add one new connected set Ck (a single component of diff). There are only th
 
 So the only way for the number of connected components to go down is if the new diff component bridges ≥2 distinct original components.
 
+![I proved it](meme.jpg)
+
 The implementation of the second algorithm (this version also use `diff = (im2 > im1).astype(np.uint8)` to aviod uint underflow to 255)
 
 ```python
@@ -507,6 +509,14 @@ if y1 < y2:
     G_biased.add_edge(tip1, tip2, cost=virtual_cost, score=-best_dist, virtual=True)
 ```
 
+### Error analysis
+
+We continue with this function. Let's first look at some fail cases:
+
+![errors](error_examples.png)
+
+TBC
+
 ### build_biased_graph()
 
-We continue with this function. TBC..
+### select_best_path()
