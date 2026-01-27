@@ -489,6 +489,26 @@ def build_biased_graph(
 
 ```
 
+### Improvement by far
+
+```
+Total Samples 11443700
+OwnTime  TotalTime  Function (filename)
+35200s    36953s   route_through_array (skimage\graph\mcp.py)
+16905s    95820s   measure_folder (pyphenotyper\features\roots_segmentation.py)
+ 5756s     9895s   reconnect_skeleton (pyphenotyper\features\roots_segmentation.py)
+ 3862s    41190s   build_biased_graph (pyphenotyper\features\roots_segmentation.py)
+ 3507s     3508s   load_image (pyphenotyper\utils\helpers.py)
+683.1s    14116s   save_prediction_for_image (pyphenotyper\features\features.py)
+574.8s    57369s   segmentation_primary (pyphenotyper\features\roots_segmentation.py)
+235.7s    11995s   prepare_data_for_segmentation (pyphenotyper\features\roots_segmentation.py)
+
+447.3s    496.1s   inpainter_correcter (pyphenotyper\features\features.py)
+201.0s    205.6s   norm (numpy\linalg\linalg.py)
+```
+
+We can see now the `inpainter_correcter` and `norm` become nothing after logical fix. Rather, data preperation and saving becomes a bigger issue (`load_image`, `save_prediction_for_image`, `prepare_data_for_segmentation`).
+
 ## Logic changes and bug fix
 
 ### Minor fix in segmentation_primary()
