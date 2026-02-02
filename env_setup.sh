@@ -4,7 +4,9 @@ set -euo pipefail
 # HADES GPU setup (Linux + Conda + TensorFlow + legacy .h5)
 # - Uses system CUDA toolkit for XLA "libdevice" (toolkit DATA)
 # - Uses pip NVIDIA wheels for CUDA runtime libs (shared objects)
-# - Avoids conda CUDA toolkit conflicts (especially with RAPIDS/cuML)
+# - Avoids conda CUDA toolkit conflicts
+# - Converts old .h5 model to fit with Keras 3
+# Reqirement: conda already insdalled
 # ============================================================
 
 # ---------- User settings ----------
@@ -17,6 +19,9 @@ CUDA_TOOLKIT_ROOT="/usr/lib/nvidia-cuda-toolkit"
 # Root directory containing .h5 models to patch (edit as needed)
 H5_ROOT="pyphenotyper/model_refrence"
 # -----------------------------------
+
+
+
 
 echo "==> [1/8] Check NVIDIA driver"
 # Why: driver must be installed and working (CUDA runtime depends on it)
@@ -40,12 +45,10 @@ sudo mkdir -p "$CUDA_TOOLKIT_ROOT/nvvm/libdevice"
 sudo ln -sf "$CUDA_TOOLKIT_ROOT/libdevice/libdevice.10.bc" \
   "$CUDA_TOOLKIT_ROOT/nvvm/libdevice/libdevice.10.bc"
 
-# Optional sanity check
 test -f "$CUDA_TOOLKIT_ROOT/nvvm/libdevice/libdevice.10.bc" || { echo "ERROR: libdevice symlink missing"; exit 1; }
 
 echo "==> [4/8] Create fresh conda env"
 # Why: clean environment avoids Windows pins and solver conflicts.
-# Note: requires conda already installed.
 if conda env list | awk '{print $1}' | grep -qx "$ENV_NAME"; then
   echo "Conda env '$ENV_NAME' already exists. Skipping create."
 else
